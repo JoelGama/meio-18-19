@@ -190,8 +190,8 @@ public class Main {
         main.add2018();
         main.calculate2019();
 
-        int S = 6000;//randGen.nextInt(10000);
-        int s = 900;//S - randGen.nextInt(S);
+        int S = randGen.nextInt(10000);
+        int s = S - randGen.nextInt(S);
         double p = main.avgProfit(S, s, numRounds);
         for (int i = 0; i < 50; i++) {
             int newS = randGen.nextInt(10000);
