@@ -137,30 +137,6 @@ public class Main {
         return (revenue - cost); //profit
     }
 
-    private double cost(ArrayList<Integer> stocks) {
-        int sum = 0;
-        double lost;
-
-        for (int i = 1; i < stocks.size(); i++) {
-            if (stocks.get(i) >= 0) sum += stocks.get(i);
-            else {
-                if (stocks.get(i-1) >= 0) {
-                    double wallet = root(i - 1, i, stocks.get(i - 1), stocks.get(i)) - (i - 1);
-                    lost = - wallet * stocks.get(i) / 2;
-                } else {
-                    lost = - (double)(stocks.get(i) + stocks.get(i-1)) / 2;
-                }
-
-                //System.out.println("Lost: " + i + " " + lost);
-            }
-        }
-
-        double avgStock = ((double) sum) / stocks.size();
-
-        return avgStock;
-
-    }
-
     private double root(Integer a, Integer b, Integer fa, Integer fb) {
 
         Double m = ((double) fb - fa) / (b - a);
@@ -177,19 +153,13 @@ public class Main {
             profit += round(S, s);   
         }
 
-        System.out.println("AvgProfit: " + profit/numRounds);
+        //System.out.println("AvgProfit: " + profit/numRounds);
         return profit/numRounds;
     }
 
-    public static void main(String[] args) {
-
+    private void hillClimbing() {
         int numRounds = 100000;
-
-        main = new Main();
-
-        main.add2018();
-        main.calculate2019();
-
+        // Setup (find best out of n random solutions)
         int S = randGen.nextInt(10000);
         int s = S - randGen.nextInt(S);
         double p = main.avgProfit(S, s, numRounds);
@@ -207,15 +177,21 @@ public class Main {
         
         System.out.println();
 
-        Double ps[] = new Double[4];
-        int changeS[] = {50, -50, 0, 0};
-        int changes[] = {0, 0, 50, -50};
-        int done = 10;
-        while (done != 0) {
-            ps[0] = main.avgProfit(S+50, s, numRounds);
-            ps[1] = main.avgProfit(S-50, s, numRounds);
-            ps[2] = main.avgProfit(S, s+50, numRounds);
-            ps[3] = main.avgProfit(S, s-50, numRounds);
+        // Hill climbling
+        Double ps[] = new Double[8];
+        int changeS[] = {50, -50, 0, 0, 50, 50, -50, -50};
+        int changes[] = {0, 0, 50, -50, 50, -50, 50, -50};
+        int tries = 10;
+        while (tries != 0) {
+            ps[0] = main.avgProfit(S+changeS[0], s+changeS[0], numRounds);
+            ps[1] = main.avgProfit(S+changeS[1], s+changeS[1], numRounds);
+            ps[2] = main.avgProfit(S+changeS[2], s+changeS[2], numRounds);
+            ps[3] = main.avgProfit(S+changeS[3], s+changeS[3], numRounds);
+
+            ps[4] = main.avgProfit(S+changeS[4], s+changeS[4], numRounds);
+            ps[5] = main.avgProfit(S+changeS[5], s+changeS[5], numRounds);
+            ps[6] = main.avgProfit(S+changeS[6], s+changeS[6], numRounds);
+            ps[7] = main.avgProfit(S+changeS[7], s+changeS[7], numRounds);
             List<Double> l = Arrays.asList(ps);
             double max = Collections.max(l);
             int maxIndex = l.indexOf(max);
@@ -223,12 +199,35 @@ public class Main {
                 p = max;
                 S += changeS[maxIndex];
                 s += changes[maxIndex];
-                done = 10;
+                tries = 10;
             } else {
-                done--;
+                tries--;
             }
-            System.out.println("S " + S + " s " + s + " done " + done);
+            System.out.println("S " + S + " s " + s + " tries " + tries);
         }
         System.out.println("Profit: " + p);
+    }
+
+    private void grid(int minS, int maxS, int SStep, int mins, int maxs, int sStep) {
+        int numRounds = 5000;
+        for (int s = mins; s <= maxs; s+=sStep) {
+            for (int S = minS; S <= maxS; S+=SStep) {
+                //System.out.println("S " + S + " s " + s);
+                double p = avgProfit(S, s, numRounds);
+                System.out.print(""+p+",");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+
+        main = new Main();
+
+        main.add2018();
+        main.calculate2019();
+
+        main.grid(0, 10000, 100, 0, 10000, 100);
+
     }
 }
