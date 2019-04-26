@@ -1,8 +1,9 @@
 import java.util.ArrayList;
-import org.apache.commons.math.distribution.NormalDistributionImpl;
+import java.util.Random;
 
 public class Main {
 
+    static final Random randGen = new Random();
 	float C1 = 17.37f;
 	float C2 = 22;
 	float C3 = 900;
@@ -28,7 +29,7 @@ public class Main {
 	}
 
 	public void calculate2019() {
-		this.trend = new ArrayList();
+		this.trend = new ArrayList<>();
 		this.trend.add(this.avg18*(1+((16+1)/2/50)*0.038f));
 		this.trend.add(this.avg18*(1+((17+28)/2/50)*0.038f));
 		this.trend.add(this.avg18*(1+((29+50)/2/50)*0.038f));
@@ -38,7 +39,7 @@ public class Main {
 		this.avg2019.add(this.avg2018.get(1)-this.avg18+this.trend.get(1));
 		this.avg2019.add(this.avg2018.get(2)-this.avg18+this.trend.get(2));
 
-		this.stdDev = new ArrayList();
+		this.stdDev = new ArrayList<>();
 		this.stdDev.add(this.avg2019.get(0)*0.087f);
 		this.stdDev.add(this.avg2019.get(1)*0.087f);
 		this.stdDev.add(this.avg2019.get(2)*0.087f);
@@ -64,20 +65,13 @@ public class Main {
 		}
 	}
 
-	public void round() throws org.apache.commons.math.MathException {
+	public void round() {
 		ArrayList<Integer> stocks = new ArrayList<>();
 		stocks.add(initialStock);
 
-		ArrayList<NormalDistributionImpl> normal = new ArrayList<>();
-
-		NormalDistributionImpl normal1 = new NormalDistributionImpl(avg2018.get(0), stdDev.get(0));
-		NormalDistributionImpl normal2 = new NormalDistributionImpl(avg2018.get(1), stdDev.get(1));
-		NormalDistributionImpl normal3 = new NormalDistributionImpl(avg2018.get(2), stdDev.get(2));
-		normal.add(normal1); normal.add(normal2); normal.add(normal3);
-
 		for (int i = 1; i <= 50; i++) {
 			int bought = 0;
-			int r = (int)(normal.get(this.period(i)).sample());
+            int r = (int) (randGen.nextGaussian() * stdDev.get(this.period(i)) + avg2018.get(this.period(i)));
 
 			int l = randL();
 			boolean delivery = (i - l) % 2 == 0;
@@ -130,7 +124,7 @@ public class Main {
 		return -c / m;
 	}
 
-	public static void main(String[] args) throws org.apache.commons.math.MathException {
+	public static void main(String[] args) {
 
 		Main main = new Main();
 
