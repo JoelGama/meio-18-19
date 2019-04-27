@@ -131,19 +131,18 @@ public class Main {
             }
         }
 
+        int lastStock = stocks.get(i-1);
+        if (lastStock < 0) {
+            if (stockOnHand.get(i-1) != lastStock) {
+                cost -= (stockOnHand.get(i-1) - lastStock) * b;
+            }
+            revenue -= -lastStock * price;
+        }
+
         cost += C1 * ((double) total) / (i-1);
         //System.out.println("Cost: " + cost + " Revenue: " + revenue + " Profit: " + (revenue - cost));
 
         return (revenue - cost); //profit
-    }
-
-    private double root(Integer a, Integer b, Integer fa, Integer fb) {
-
-        Double m = ((double) fb - fa) / (b - a);
-
-        double c = fb - b * m;
-
-        return -c / m;
     }
 
     private double avgProfit(int S, int s, int numRounds) {
@@ -153,19 +152,20 @@ public class Main {
             profit += round(S, s);   
         }
 
-        //System.out.println("AvgProfit: " + profit/numRounds);
+        System.out.println("AvgProfit: " + profit/numRounds);
         return profit/numRounds;
     }
 
     private void hillClimbing() {
-        int numRounds = 100000;
+        int numRounds = 100;
         // Setup (find best out of n random solutions)
         int S = randGen.nextInt(10000);
         int s = S - randGen.nextInt(S);
+        System.out.println("S " + S + " s " + s);
         double p = main.avgProfit(S, s, numRounds);
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 5000; i++) {
             int newS = randGen.nextInt(10000);
-            int news = newS - randGen.nextInt(newS);
+            int news = newS - randGen.nextInt(newS+1);
             System.out.println("S " + newS + " s " + news);
             double newp = main.avgProfit(newS, news, numRounds);
             if (newp > p) {
@@ -177,21 +177,25 @@ public class Main {
         
         System.out.println();
 
+        numRounds = 50000;
+        p = main.avgProfit(S, s, numRounds);
+        System.out.println("S " + S + " s " + s);
+        System.out.println();
         // Hill climbling
         Double ps[] = new Double[8];
-        int changeS[] = {50, -50, 0, 0, 50, 50, -50, -50};
-        int changes[] = {0, 0, 50, -50, 50, -50, 50, -50};
+        int changeS[] = {10, -10, 0, 0, 10, 10, -10, -10};
+        int changes[] = {0, 0, 10, -10, 10, -10, 10, -10};
         int tries = 10;
         while (tries != 0) {
-            ps[0] = main.avgProfit(S+changeS[0], s+changeS[0], numRounds);
-            ps[1] = main.avgProfit(S+changeS[1], s+changeS[1], numRounds);
-            ps[2] = main.avgProfit(S+changeS[2], s+changeS[2], numRounds);
-            ps[3] = main.avgProfit(S+changeS[3], s+changeS[3], numRounds);
+            ps[0] = main.avgProfit(S+changeS[0], s+changes[0], numRounds);
+            ps[1] = main.avgProfit(S+changeS[1], s+changes[1], numRounds);
+            ps[2] = main.avgProfit(S+changeS[2], s+changes[2], numRounds);
+            ps[3] = main.avgProfit(S+changeS[3], s+changes[3], numRounds);
 
-            ps[4] = main.avgProfit(S+changeS[4], s+changeS[4], numRounds);
-            ps[5] = main.avgProfit(S+changeS[5], s+changeS[5], numRounds);
-            ps[6] = main.avgProfit(S+changeS[6], s+changeS[6], numRounds);
-            ps[7] = main.avgProfit(S+changeS[7], s+changeS[7], numRounds);
+            ps[4] = main.avgProfit(S+changeS[4], s+changes[4], numRounds);
+            ps[5] = main.avgProfit(S+changeS[5], s+changes[5], numRounds);
+            ps[6] = main.avgProfit(S+changeS[6], s+changes[6], numRounds);
+            ps[7] = main.avgProfit(S+changeS[7], s+changes[7], numRounds);
             List<Double> l = Arrays.asList(ps);
             double max = Collections.max(l);
             int maxIndex = l.indexOf(max);
@@ -227,7 +231,8 @@ public class Main {
         main.add2018();
         main.calculate2019();
 
-        main.grid(0, 10000, 100, 0, 10000, 100);
+        //main.grid(0, 10000, 100, 0, 10000, 100);
+        main.hillClimbing();
 
     }
 }
