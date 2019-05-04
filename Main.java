@@ -22,7 +22,7 @@ public class Main {
     double t = 2;
     double price = 120;
 
-    double avg18 = 414.34; // (419.1 * 16 + 554.2 * 12 + 334.6 * 22)/50
+    double avg18 = (419.1 * 16 + 554.2 * 12 + 334.6 * 22)/50;
 
     ArrayList<Double> avg2018;
     ArrayList<Double> cicle2019;
