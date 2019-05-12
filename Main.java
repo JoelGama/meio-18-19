@@ -61,7 +61,7 @@ public class Main {
     }
 
     public double getTrend(int week) {
-        return this.avg18*(1+(week/50)*0.038);
+        return this.avg18*Math.exp(0.038*week/weeks);
     }
 
     public int randL() {
@@ -271,6 +271,7 @@ public class Main {
             for (int S = minS; S <= maxS; S+=SStep) {
                 //System.out.println("S " + S + " s " + s);
                 double p = avgProfit(S, s, numRounds);
+                //double p = avgService(S, s, numRounds);
                 System.out.print(""+p+(S == maxS ? "" : ","));
             }
             System.out.println();
