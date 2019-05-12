@@ -187,29 +187,8 @@ public class Main {
         return service/numRounds;
     }
 
-    private void hillClimbing() {
-        int numRounds = 100;
-        // Setup (find best out of n random solutions)
-        int S = randGen.nextInt(10000);
-        int s = S - randGen.nextInt(S);
-        System.out.println("S " + S + " s " + s);
+    private void hillClimbing(int S, int s, int numRounds) {
         double p = main.avgProfit(S, s, numRounds);
-        for (int i = 0; i < 5000; i++) {
-            int newS = randGen.nextInt(10000);
-            int news = newS - randGen.nextInt(newS+1);
-            double newp = main.avgProfit(newS, news, numRounds);
-            System.out.println("S " + newS + " s " + news);
-            if (newp > p) {
-                p = newp;
-                S = newS;
-                s = news;
-            }
-        }
-
-        System.out.println();
-
-        numRounds = 10000;
-        p = main.avgProfit(S, s, numRounds);
         System.out.println("S " + S + " s " + s);
         System.out.println();
         // Hill climbling
@@ -241,22 +220,10 @@ public class Main {
             System.out.println("S " + S + " s " + s + " tries " + tries);
         }
 
-        // round to tens
-        S = (S+5)/10*10;
-        s = (s+5)/10*10;
-
-        numRounds = 500000;
         System.out.println("\nResults:");
         System.out.println("S " + S + " s " + s);
         System.out.println("Profit (optimal): " + main.avgProfit(S, s, numRounds));
         System.out.println("Service: " + main.avgService(S, s, numRounds));
-
-        for (int i = 0; i < ps.length; i++) {
-            double alt_profit = main.avgProfit(S+changeS[i]*10, s+changes[i]*10, numRounds);
-            double alt_service = main.avgService(S+changeS[i]*10, s+changes[i]*10, numRounds);
-            System.out.println("S " + (S+changeS[i]*10) + " s " + (s+changes[i]*10));
-            System.out.println("Profit: " + alt_profit + " Service: " + alt_service);
-        }
     }
 
     private void grid(int minS, int maxS, int SStep, int mins, int maxs, int sStep) {
@@ -285,8 +252,8 @@ public class Main {
         main.add2018();
         main.calculate2019();
 
-        main.grid(0, 15000, 100, 0, 10000, 100);
-        //main.hillClimbing();
+        //main.grid(0, 15000, 100, 0, 10000, 100);
+        main.hillClimbing(11000, 600, 100000);
 
     }
 }
